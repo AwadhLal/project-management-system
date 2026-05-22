@@ -12,6 +12,7 @@ import CompanyRegistration from "./pages/CompanyRegistration";
 import EmployeeSignup from "./pages/EmployeeSignup";
 import GoogleSignupFlow from "./pages/GoogleSignupFlow";
 import CompanyDashboard from "./pages/CompanyDashboard";
+import Settings from "./pages/Settings";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route path="projects" element={<Projects />} />
           <Route path="projectsDetail" element={<ProjectDetails />} />
           <Route path="taskDetails" element={<TaskDetails />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </>

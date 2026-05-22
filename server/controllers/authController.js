@@ -465,3 +465,90 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Update Profile
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { name, image, department, position, phone, bio } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update allowed fields
+    if (name) user.name = name;
+    if (image !== undefined) user.image = image;
+    if (department) user.department = department;
+    if (position !== undefined) user.position = position;
+    if (phone !== undefined) user.phone = phone;
+    if (bio !== undefined) user.bio = bio;
+
+    await user.save();
+
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        userType: user.userType,
+        role: user.role,
+        companyId: user.companyId,
+        companyCode: user.companyCode,
+        department: user.department,
+        position: user.position,
+        phone: user.phone,
+        bio: user.bio,
+        isApproved: user.isApproved,
+      }
+    });
+
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Update Password
+export const updatePassword = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Current and new passwords are required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if user has a password (not OAuth only)
+    if (!user.password) {
+      return res.status(400).json({ message: "Password not set. Please use OAuth login." });
+    }
+
+    // Verify current password
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
+      return res.status(400).json({ message: "Current password is incorrect" });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedNewPassword;
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
+
+  } catch (error) {
+    console.error("Update password error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};

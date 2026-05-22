@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import MyTasksSidebar from "./MyTasksSidebar";
 import ProjectSidebar from "./ProjectsSidebar";
 import WorkspaceDropdown from "./WorkspaceDropdown";
@@ -10,11 +10,11 @@ import {
   UsersIcon,
   Building2,
 } from "lucide-react";
-import { useClerk, useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const { openUserProfile } = useClerk();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const menuItems = [
     { name: "Dashboard", href: "/", icon: LayoutDashboardIcon },
@@ -36,6 +36,10 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [setIsSidebarOpen]);
+
+  const handleSettingsClick = () => {
+    navigate("/settings");
+  };
 
   return (
     <div
@@ -66,7 +70,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
               </NavLink>
             ))}
             <button
-              onClick={openUserProfile}
+              onClick={handleSettingsClick}
               className="flex w-full items-center gap-3 py-2 px-4 text-gray-800 dark:text-zinc-100 cursor-pointer rounded hover:bg-gray-50 dark:hover:bg-zinc-800/60 transition-all"
             >
               <SettingsIcon size={16} />

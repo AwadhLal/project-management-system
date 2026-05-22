@@ -17,16 +17,13 @@ const companySchema = new mongoose.Schema(
       required: true,
       unique: true,
       uppercase: true,
-      minlength: 3,
-      maxlength: 8,
       trim: true,
     },
     domain: {
       type: String,
       required: true,
-      unique: true,
-      trim: true,
       lowercase: true,
+      trim: true,
     },
     logo: {
       type: String,
@@ -49,22 +46,17 @@ const companySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    subscription: {
-      type: String,
-      enum: ["FREE", "BASIC", "PREMIUM", "ENTERPRISE"],
-      default: "FREE",
-    },
-    maxEmployees: {
-      type: Number,
-      default: 10, // Based on subscription
-    },
     isActive: {
       type: Boolean,
       default: true,
     },
     allowRegistration: {
       type: Boolean,
-      default: true, // Company admin can enable/disable new registrations
+      default: true,
+    },
+    maxEmployees: {
+      type: Number,
+      default: 100,
     },
   },
   {

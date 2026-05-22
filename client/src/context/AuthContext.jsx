@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import api from "../configs/api";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -18,14 +18,8 @@ export const AuthProvider = ({ children }) => {
       const socketUrl = import.meta.env.VITE_BASEURL || "http://localhost:5001";
       const newSocket = io(socketUrl);
       setSocket(newSocket);
-
-      newSocket.on("connect", () => {
-        console.log("Socket connected client-side 🔌");
-      });
-
-      return () => {
-        newSocket.disconnect();
-      };
+      newSocket.on("connect", () => console.log("Socket connected 🔌"));
+      return () => newSocket.disconnect();
     } else {
       if (socket) {
         socket.disconnect();
@@ -36,11 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
+    if (!token) { setLoading(false); return; }
     try {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       const { data } = await api.get("/api/auth/me");
@@ -53,9 +43,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  useEffect(() => { fetchUser(); }, []);
 
   const login = async (email, password) => {
     try {
@@ -74,28 +62,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password, image) => {
-    try {
-      setLoading(true);
-      const { data } = await api.post("/api/auth/register", {
-        name,
-        email,
-        password,
-        image,
-      });
-      localStorage.setItem("token", data.token);
-      api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
-      setUser(data.user);
-      toast.success("Account created successfully!");
-      navigate("/");
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Registration failed");
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const logout = () => {
     localStorage.removeItem("token");
     delete api.defaults.headers.common["Authorization"];
@@ -104,24 +70,10 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
-  const getToken = async () => {
-    return localStorage.getItem("token");
-  };
+  const getToken = async () => localStorage.getItem("token");
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoaded: !loading,
-        loading,
-        login,
-        register,
-        logout,
-        getToken,
-        setUser,
-        socket,
-      }}
-    >
+    <AuthContext.Provider value={{ user, isLoaded: !loading, loading, login, logout, getToken, setUser, socket }}>
       {children}
     </AuthContext.Provider>
   );
@@ -132,9 +84,7 @@ export const useUser = () => useAuth();
 export const useClerk = () => {
   const auth = useAuth();
   return {
-    openUserProfile: () => {
-      toast.success("Profile Settings functionality can be added here!");
-    },
+    openUserProfile: () => toast.success("Open Settings to manage your profile"),
     signOut: auth.logout,
   };
 };

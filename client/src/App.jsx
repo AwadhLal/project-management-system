@@ -7,7 +7,6 @@ import Team from "./pages/Team";
 import ProjectDetails from "./pages/ProjectDetails";
 import TaskDetails from "./pages/TaskDetails";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import EmployeeSignup from "./pages/EmployeeSignup";
 import GoogleSignupFlow from "./pages/GoogleSignupFlow";
@@ -20,7 +19,6 @@ const App = () => {
       <Toaster />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="/google-signup" element={<GoogleSignupFlow />} />
         <Route path="/company-signup" element={<CompanyRegistration />} />
         <Route path="/employee-signup" element={<EmployeeSignup />} />

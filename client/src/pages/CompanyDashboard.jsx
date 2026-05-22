@@ -8,8 +8,7 @@ import {
   TrendingUp,
   UserPlus,
   Settings,
-  BarChart3,
-  Calendar
+  BarChart3
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import api from "../configs/api";
@@ -36,18 +35,11 @@ const CompanyDashboard = () => {
     try {
       const token = await getToken();
       
-      // Fetch company details and stats
-      const [companyRes, employeesRes] = await Promise.all([
-        api.get("/api/company/details", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        api.get("/api/company/employees", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-      ]);
+      const { data } = await api.get("/api/company/employees", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      const employees = employeesRes.data.employees || [];
-      
+      const employees = data.employees || [];
       setCompanyStats({
         totalEmployees: employees.length,
         approvedEmployees: employees.filter(emp => emp.isApproved).length,

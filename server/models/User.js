@@ -61,6 +61,16 @@ const userSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
+    phone: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    bio: {
+      type: String,
+      default: "",
+      trim: true,
+    },
     userType: {
       type: String,
       enum: ["COMPANY_ADMIN", "EMPLOYEE", "FREELANCER"],

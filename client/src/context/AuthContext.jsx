@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   // Socket Connection Management
   useEffect(() => {
     if (user) {
-      const socketUrl = import.meta.env.VITE_BASEURL || "http://localhost:5001";
+      const socketUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
       const newSocket = io(socketUrl);
       setSocket(newSocket);
       newSocket.on("connect", () => console.log("Socket connected 🔌"));

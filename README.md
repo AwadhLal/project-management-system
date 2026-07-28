@@ -131,7 +131,7 @@ npm run dev
 **Server (`server/.env`):**
 ```env
 PORT=5001
-DATABASE_URL="mongodb://127.0.0.1:27017/project-management-system"
+MONGO_URI="mongodb://127.0.0.1:27017/project-management-system"
 JWT_SECRET="your_super_secret_jwt_key"
 
 # Cloudinary Config
